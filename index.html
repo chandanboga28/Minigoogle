@@ -3,30 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Google 1998 - 3D Cyber Edition</title>
+<title>Mini Google 1998 - Cosmic Nebula 3D</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
     --g-blue: #38bdf8;
-    --g-blue-glow: rgba(56, 189, 248, 0.4);
-    --g-red: #f87171;
-    --g-red-glow: rgba(248, 113, 113, 0.4);
+    --g-blue-glow: rgba(56, 189, 248, 0.45);
+    --g-red: #fb7185;
+    --g-red-glow: rgba(251, 113, 133, 0.45);
     --g-yellow: #fbbf24;
-    --g-yellow-glow: rgba(251, 191, 36, 0.4);
+    --g-yellow-glow: rgba(251, 191, 36, 0.45);
     --g-green: #34d399;
-    --g-green-glow: rgba(52, 211, 153, 0.4);
-    --bg: #090d16;
-    --card-bg: rgba(15, 23, 42, 0.78);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --card-border-hover: rgba(56, 189, 248, 0.35);
+    --g-green-glow: rgba(52, 211, 153, 0.45);
+    --accent-purple: #c084fc;
+    --accent-purple-glow: rgba(192, 132, 252, 0.4);
+    --bg: #0b071b;
+    --card-bg: rgba(22, 15, 46, 0.78);
+    --card-border: rgba(168, 85, 247, 0.2);
+    --card-border-hover: rgba(192, 132, 252, 0.48);
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
-    --muted: #94a3b8;
-    --url-green: #34d399;
-    --url-green-hover: #6ee7b7;
-    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
-    --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.65);
+    --muted: #a78bfa;
+    --url-green: #2dd4bf;
+    --url-green-hover: #5eead4;
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.7);
     --radius-sm: 6px;
     --radius-md: 14px;
     --radius-lg: 20px;
@@ -39,10 +41,10 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg);
     background-image:
-      radial-gradient(ellipse at 15% 10%, rgba(56, 189, 248, 0.18) 0%, transparent 45%),
-      radial-gradient(ellipse at 85% 15%, rgba(52, 211, 153, 0.15) 0%, transparent 45%),
-      radial-gradient(ellipse at 50% 80%, rgba(248, 113, 113, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 85% 85%, rgba(251, 191, 36, 0.1) 0%, transparent 40%);
+      radial-gradient(ellipse at 15% 10%, rgba(168, 85, 247, 0.24) 0%, transparent 48%),
+      radial-gradient(ellipse at 85% 15%, rgba(6, 182, 212, 0.22) 0%, transparent 46%),
+      radial-gradient(ellipse at 50% 80%, rgba(244, 63, 94, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 85%, rgba(251, 191, 36, 0.14) 0%, transparent 42%);
     background-attachment: fixed;
     color: var(--text-primary);
     padding: 36px 20px 60px;
@@ -63,7 +65,7 @@
     height: 100vh;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.85;
+    opacity: 0.9;
   }
 
   .container {
@@ -83,7 +85,7 @@
     align-items: center;
     user-select: none;
     font-family: 'Times New Roman', Times, serif;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 35px rgba(56, 189, 248, 0.25);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 35px rgba(168, 85, 247, 0.3);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .logo:hover {
@@ -95,8 +97,8 @@
   .lg { color: var(--g-green); text-shadow: 0 0 20px var(--g-green-glow); }
   .logo-x { color: var(--g-red); font-style: italic; margin-left: 2px; }
   .badge {
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(37, 99, 235, 0.28));
-    color: var(--g-blue);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.28), rgba(99, 102, 241, 0.32));
+    color: var(--accent-purple);
     font-size: 13px;
     font-weight: 700;
     padding: 4px 12px;
@@ -104,8 +106,8 @@
     margin-left: 12px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     letter-spacing: 0.04em;
-    border: 1px solid rgba(56, 189, 248, 0.45);
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(192, 132, 252, 0.45);
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   .subtitle {
     font-size: 14.5px;
@@ -113,7 +115,7 @@
     margin-top: 8px;
     font-weight: 500;
     letter-spacing: 0.01em;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
   }
 
   /* Search Box */
@@ -121,16 +123,16 @@
     background: var(--card-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1.5px solid var(--card-border);
     border-radius: 24px;
     padding: 26px 30px;
-    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(168, 85, 247, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     margin-bottom: 22px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
   .search-box:hover {
-    border-color: rgba(56, 189, 248, 0.3);
-    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.15);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 35px rgba(168, 85, 247, 0.25);
   }
   .row {
     display: flex;
@@ -143,18 +145,18 @@
     flex: 1 1 280px;
     font-size: 16px;
     padding: 13px 22px;
-    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    border: 1.5px solid rgba(168, 85, 247, 0.3);
     border-radius: var(--radius-full);
     outline: none;
-    background: rgba(30, 41, 59, 0.75);
+    background: rgba(33, 22, 62, 0.75);
     color: var(--text-primary);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.35);
   }
   #q:focus {
-    background: rgba(30, 41, 59, 0.95);
-    border-color: var(--g-blue);
-    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 20px rgba(56, 189, 248, 0.2);
+    background: rgba(39, 25, 75, 0.95);
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.25), 0 0 25px rgba(168, 85, 247, 0.35);
   }
   .btn {
     padding: 12px 24px;
@@ -172,22 +174,22 @@
   }
   .btn:active { transform: scale(0.97); }
   .btn-blue {
-    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
     color: #ffffff;
-    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 18px rgba(147, 51, 234, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   .btn-blue:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5);
+    box-shadow: 0 8px 26px rgba(168, 85, 247, 0.6);
   }
   .btn-teal {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
     color: #ffffff;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 18px rgba(6, 182, 212, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   .btn-teal:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(52, 211, 153, 0.45);
+    box-shadow: 0 8px 26px rgba(6, 182, 212, 0.55);
   }
 
   /* Example Buttons */
@@ -201,8 +203,8 @@
     color: var(--muted);
   }
   .ex {
-    background: rgba(30, 41, 59, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(36, 24, 68, 0.65);
+    border: 1px solid rgba(168, 85, 247, 0.22);
     border-radius: var(--radius-full);
     padding: 6px 14px;
     cursor: pointer;
@@ -212,18 +214,18 @@
     transition: all 0.2s ease;
   }
   .ex:hover {
-    background: rgba(56, 189, 248, 0.16);
-    border-color: var(--g-blue);
-    color: var(--g-blue);
+    background: rgba(168, 85, 247, 0.25);
+    border-color: var(--accent-purple);
+    color: #f3e8ff;
     transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
   }
 
   /* Search History (localStorage) */
   .history-section {
     margin-top: 18px;
     padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(168, 85, 247, 0.15);
     display: none;
   }
   .history-header {
@@ -245,26 +247,26 @@
     font-size: 11.5px;
     font-weight: 600;
     padding: 4px 12px;
-    border: 1px solid rgba(248, 113, 113, 0.4);
+    border: 1px solid rgba(251, 113, 133, 0.4);
     border-radius: var(--radius-full);
-    background: rgba(239, 68, 68, 0.12);
+    background: rgba(244, 63, 94, 0.15);
     color: var(--g-red);
     cursor: pointer;
     font-family: inherit;
     transition: all 0.2s ease;
   }
   .btn-clear-hist:hover {
-    background: rgba(239, 68, 68, 0.25);
-    box-shadow: 0 0 12px rgba(248, 113, 113, 0.4);
+    background: rgba(244, 63, 94, 0.3);
+    box-shadow: 0 0 14px rgba(251, 113, 133, 0.45);
   }
   .history-tags { display: flex; flex-wrap: wrap; gap: 7px; }
   .history-tag {
     padding: 5px 13px;
     font-size: 12px;
     font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.2);
     border-radius: var(--radius-full);
-    background: rgba(30, 41, 59, 0.55);
+    background: rgba(36, 24, 68, 0.55);
     cursor: pointer;
     color: var(--text-secondary);
     display: inline-flex;
@@ -274,11 +276,11 @@
     transition: all 0.2s ease;
   }
   .history-tag:hover {
-    background: rgba(56, 189, 248, 0.16);
-    border-color: var(--g-blue);
-    color: var(--g-blue);
+    background: rgba(168, 85, 247, 0.25);
+    border-color: var(--accent-purple);
+    color: #f3e8ff;
     transform: translateY(-1px);
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.25);
   }
 
   /* Status Bar */
@@ -288,10 +290,10 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    background: rgba(15, 23, 42, 0.72);
+    background: rgba(22, 15, 46, 0.75);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 12px 22px;
     font-size: 13.5px;
@@ -301,10 +303,10 @@
   }
   .status-bar strong { color: var(--text-primary); font-weight: 700; }
   #scoreSum {
-    background: rgba(52, 211, 153, 0.16);
-    color: var(--g-green);
-    border: 1px solid rgba(52, 211, 153, 0.4);
-    box-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+    background: rgba(45, 212, 191, 0.18);
+    color: var(--url-green);
+    border: 1px solid rgba(45, 212, 191, 0.4);
+    box-shadow: 0 0 14px rgba(45, 212, 191, 0.25);
     padding: 3px 10px;
     border-radius: 8px;
     font-weight: 700;
@@ -333,13 +335,13 @@
     background: var(--card-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     padding: 22px;
     box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
   .col-hdr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.15);
     padding-bottom: 14px;
     margin-bottom: 16px;
   }
@@ -370,28 +372,28 @@
 
   /* Cards with 3D Depth */
   .card {
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.16);
     border-radius: var(--radius-md);
     padding: 16px 18px;
     margin-bottom: 14px;
-    background: rgba(30, 41, 59, 0.65);
+    background: rgba(28, 18, 54, 0.68);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     transform: perspective(1000px) translateZ(0);
     position: relative;
   }
   .card:hover {
     border-color: var(--card-border-hover);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.2);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 24px rgba(168, 85, 247, 0.25);
     transform: perspective(1000px) translateY(-4px) translateZ(8px);
-    background: rgba(30, 41, 59, 0.88);
+    background: rgba(35, 22, 68, 0.9);
   }
   .card.spam {
     border-left: 4px solid var(--g-red);
-    border-color: rgba(248, 113, 113, 0.3);
-    background: linear-gradient(90deg, rgba(239, 68, 68, 0.16) 0%, rgba(30, 41, 59, 0.68) 45%);
+    border-color: rgba(251, 113, 133, 0.35);
+    background: linear-gradient(90deg, rgba(244, 63, 94, 0.18) 0%, rgba(28, 18, 54, 0.7) 45%);
   }
   .card-top {
     display: flex;
@@ -404,7 +406,7 @@
     font-size: 11.5px;
     font-weight: 700;
     color: var(--muted);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(168, 85, 247, 0.15);
     padding: 3px 10px;
     border-radius: var(--radius-full);
     letter-spacing: 0.02em;
@@ -414,7 +416,7 @@
     color: #0f172a;
     border: 1px solid rgba(251, 191, 36, 0.6);
     font-weight: 800;
-    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+    box-shadow: 0 0 16px rgba(251, 191, 36, 0.45);
   }
   .spam-tag {
     font-size: 11px;
@@ -424,23 +426,23 @@
     letter-spacing: 0.01em;
   }
   .spam-tag.red {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    border: 1px solid rgba(248, 113, 113, 0.4);
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+    background: rgba(244, 63, 94, 0.22);
+    color: #fecdd3;
+    border: 1px solid rgba(251, 113, 133, 0.45);
+    box-shadow: 0 0 12px rgba(244, 63, 94, 0.25);
   }
   .spam-tag.blue {
-    background: rgba(56, 189, 248, 0.2);
+    background: rgba(56, 189, 248, 0.22);
     color: #bae6fd;
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
   }
   .card-url {
     color: var(--url-green);
     font-size: 14.5px;
     font-weight: 600;
     text-decoration: none;
-    text-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
+    text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
     word-break: break-all;
     display: inline-block;
     margin-bottom: 6px;
@@ -473,32 +475,32 @@
     gap: 8px;
     font-size: 12.5px;
     color: var(--muted);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(168, 85, 247, 0.15);
     padding-top: 10px;
   }
   .score-red {
     color: var(--g-red);
     font-weight: 700;
     font-size: 13px;
-    background: rgba(239, 68, 68, 0.16);
-    border: 1px solid rgba(239, 68, 68, 0.35);
+    background: rgba(244, 63, 94, 0.18);
+    border: 1px solid rgba(251, 113, 133, 0.4);
     padding: 3px 10px;
     border-radius: 6px;
   }
   .score-green {
-    color: var(--g-green);
+    color: var(--url-green);
     font-weight: 700;
     font-size: 13px;
-    background: rgba(52, 211, 153, 0.16);
-    border: 1px solid rgba(52, 211, 153, 0.35);
+    background: rgba(45, 212, 191, 0.18);
+    border: 1px solid rgba(45, 212, 191, 0.4);
     padding: 3px 10px;
     border-radius: 6px;
   }
   .links-in {
     font-weight: 700;
     color: var(--g-blue);
-    background: rgba(56, 189, 248, 0.16);
-    border: 1px solid rgba(56, 189, 248, 0.35);
+    background: rgba(56, 189, 248, 0.18);
+    border: 1px solid rgba(56, 189, 248, 0.4);
     padding: 3px 10px;
     border-radius: 6px;
   }
@@ -506,7 +508,7 @@
   /* Empty state */
   .empty {
     background: var(--card-bg);
-    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border: 2px dashed rgba(168, 85, 247, 0.25);
     border-radius: 20px;
     padding: 50px 24px;
     text-align: center;
@@ -518,7 +520,7 @@
     font-size: 48px;
     margin-bottom: 12px;
     line-height: 1;
-    filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.3));
+    filter: drop-shadow(0 4px 12px rgba(168, 85, 247, 0.4));
   }
   .empty-title {
     font-size: 20px;
@@ -538,7 +540,7 @@
     text-align: center;
     margin-top: 48px;
     font-size: 13px;
-    color: #64748b;
+    color: #7c3aed;
     font-weight: 500;
   }
 </style>
@@ -1947,18 +1949,18 @@ function init3DScene() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
       // Ambient & Directional Lights
-      var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+      var ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
       scene.add(ambientLight);
 
-      var light1 = new THREE.PointLight(0x38bdf8, 2.2, 70);
+      var light1 = new THREE.PointLight(0xc084fc, 2.5, 75);
       light1.position.set(-16, 12, 10);
       scene.add(light1);
 
-      var light2 = new THREE.PointLight(0xf87171, 2.0, 70);
+      var light2 = new THREE.PointLight(0x06b6d4, 2.2, 75);
       light2.position.set(16, -10, 10);
       scene.add(light2);
 
-      var light3 = new THREE.PointLight(0x34d399, 1.8, 70);
+      var light3 = new THREE.PointLight(0xfb7185, 2.0, 75);
       light3.position.set(0, 15, 6);
       scene.add(light3);
 
@@ -1967,10 +1969,10 @@ function init3DScene() {
 
       var objects = [];
 
-      // 1. Google Blue 3D Cube
+      // 1. Amethyst 3D Cube with Neon Edge Highlights
       var cubeMat = new THREE.MeshStandardMaterial({
-        color: 0x38bdf8,
-        metalness: 0.35,
+        color: 0xa855f7,
+        metalness: 0.4,
         roughness: 0.2,
         transparent: true,
         opacity: 0.88
@@ -1982,15 +1984,15 @@ function init3DScene() {
 
       var cubeWire = new THREE.LineSegments(
         new THREE.EdgesGeometry(new THREE.BoxGeometry(2.52, 2.52, 2.52)),
-        new THREE.LineBasicMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.7 })
+        new THREE.LineBasicMaterial({ color: 0xe9d5ff, transparent: true, opacity: 0.75 })
       );
       cube.add(cubeWire);
 
-      // 2. Google Red 3D Octahedron
+      // 2. Cosmic Ruby 3D Octahedron
       var octMat = new THREE.MeshStandardMaterial({
-        color: 0xf87171,
-        metalness: 0.4,
-        roughness: 0.25,
+        color: 0xf43f5e,
+        metalness: 0.45,
+        roughness: 0.2,
         transparent: true,
         opacity: 0.88
       });
@@ -1999,11 +2001,11 @@ function init3DScene() {
       group.add(octahedron);
       objects.push({ mesh: octahedron, rx: 0.01, ry: -0.009, rz: 0.007, baseY: 6, speed: 0.0018 });
 
-      // 3. Google Yellow 3D Torus
+      // 3. Celestial Amber 3D Torus
       var torMat = new THREE.MeshStandardMaterial({
         color: 0xfbbf24,
-        metalness: 0.5,
-        roughness: 0.3,
+        metalness: 0.55,
+        roughness: 0.25,
         transparent: true,
         opacity: 0.88
       });
@@ -2012,10 +2014,10 @@ function init3DScene() {
       group.add(torus);
       objects.push({ mesh: torus, rx: 0.007, ry: 0.014, rz: -0.008, baseY: -7, speed: 0.0012 });
 
-      // 4. Google Green 3D Icosahedron
+      // 4. Cyan Emerald 3D Icosahedron
       var icoMat = new THREE.MeshStandardMaterial({
-        color: 0x34d399,
-        metalness: 0.35,
+        color: 0x2dd4bf,
+        metalness: 0.4,
         roughness: 0.2,
         transparent: true,
         opacity: 0.88
@@ -2026,9 +2028,9 @@ function init3DScene() {
       objects.push({ mesh: icosahedron, rx: -0.009, ry: 0.011, rz: 0.006, baseY: -8, speed: 0.0016 });
 
       // 5. 3D PageRank Web Graph (Constellation of Connected Nodes)
-      var nodeCount = 36;
+      var nodeCount = 38;
       var nodeGeom = new THREE.SphereGeometry(0.26, 12, 12);
-      var colors = [0x38bdf8, 0xf87171, 0xfbbf24, 0x34d399];
+      var colors = [0xc084fc, 0x06b6d4, 0xfb7185, 0xfbbf24, 0x2dd4bf];
       var nodes = [];
 
       for (var i = 0; i < nodeCount; i++) {
@@ -2054,9 +2056,9 @@ function init3DScene() {
 
       var maxLines = nodeCount * 4;
       var lineMat = new THREE.LineBasicMaterial({
-        color: 0x38bdf8,
+        color: 0xc084fc,
         transparent: true,
-        opacity: 0.25
+        opacity: 0.3
       });
       var lineGeom = new THREE.BufferGeometry();
       var linePositions = new Float32Array(maxLines * 6);
@@ -2151,7 +2153,7 @@ function initCanvas3DFallback(canvas) {
   });
 
   var points = [];
-  var colors = ['#38bdf8', '#f87171', '#fbbf24', '#34d399'];
+  var colors = ['#c084fc', '#06b6d4', '#fb7185', '#fbbf24', '#2dd4bf'];
   for (var i = 0; i < 40; i++) {
     points.push({
       x: (Math.random() - 0.5) * 800,
@@ -2202,7 +2204,7 @@ function initCanvas3DFallback(canvas) {
         var dy = proj[i].y - proj[j].y;
         var dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 110) {
-          ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.25 * (1 - dist / 110)) + ')';
+          ctx.strokeStyle = 'rgba(192, 132, 252, ' + (0.35 * (1 - dist / 110)) + ')';
           ctx.beginPath();
           ctx.moveTo(proj[i].x, proj[i].y);
           ctx.lineTo(proj[j].x, proj[j].y);

@@ -3,29 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Google 1998</title>
+<title>Mini Google 1998 - 3D Cyber Edition</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
-    --g-blue: #4285f4;
-    --g-blue-dark: #1a73e8;
-    --g-red: #ea4335;
-    --g-yellow: #fbbc05;
-    --g-green: #34a853;
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --muted: #64748b;
-    --url-green: #059669;
-    --url-green-hover: #047857;
-    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
-    --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.04);
-    --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+    --g-blue: #38bdf8;
+    --g-blue-glow: rgba(56, 189, 248, 0.4);
+    --g-red: #f87171;
+    --g-red-glow: rgba(248, 113, 113, 0.4);
+    --g-yellow: #fbbf24;
+    --g-yellow-glow: rgba(251, 191, 36, 0.4);
+    --g-green: #34d399;
+    --g-green-glow: rgba(52, 211, 153, 0.4);
+    --bg: #090d16;
+    --card-bg: rgba(15, 23, 42, 0.78);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-border-hover: rgba(56, 189, 248, 0.35);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --muted: #94a3b8;
+    --url-green: #34d399;
+    --url-green-hover: #6ee7b7;
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.65);
     --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 18px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
     --radius-full: 9999px;
   }
 
@@ -35,9 +39,10 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg);
     background-image:
-      radial-gradient(at 0% 0%, rgba(66, 133, 244, 0.08) 0px, transparent 45%),
-      radial-gradient(at 100% 0%, rgba(52, 168, 83, 0.07) 0px, transparent 45%),
-      radial-gradient(at 50% 100%, rgba(234, 67, 53, 0.05) 0px, transparent 50%);
+      radial-gradient(ellipse at 15% 10%, rgba(56, 189, 248, 0.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 15%, rgba(52, 211, 153, 0.15) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 80%, rgba(248, 113, 113, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 85%, rgba(251, 191, 36, 0.1) 0%, transparent 40%);
     background-attachment: fixed;
     color: var(--text-primary);
     padding: 36px 20px 60px;
@@ -45,92 +50,120 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
   }
 
-  .container { max-width: 1080px; margin: 0 auto; }
+  /* 3D Background Canvas */
+  #bg-canvas3d {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.85;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
 
   /* Header & 1998 Retro Logo */
   header { text-align: center; margin-bottom: 26px; }
   .logo {
-    font-size: 50px;
+    font-size: 54px;
     font-weight: 800;
     letter-spacing: -1.5px;
     display: inline-flex;
     align-items: center;
     user-select: none;
     font-family: 'Times New Roman', Times, serif;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06));
-    transition: transform 0.2s ease;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 35px rgba(56, 189, 248, 0.25);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .logo:hover { transform: scale(1.02); }
-  .lb { color: var(--g-blue); }
-  .lr { color: var(--g-red); }
-  .ly { color: var(--g-yellow); }
-  .lg { color: var(--g-green); }
+  .logo:hover {
+    transform: scale(1.03) translateY(-2px);
+  }
+  .lb { color: var(--g-blue); text-shadow: 0 0 20px var(--g-blue-glow); }
+  .lr { color: var(--g-red); text-shadow: 0 0 20px var(--g-red-glow); }
+  .ly { color: var(--g-yellow); text-shadow: 0 0 20px var(--g-yellow-glow); }
+  .lg { color: var(--g-green); text-shadow: 0 0 20px var(--g-green-glow); }
   .logo-x { color: var(--g-red); font-style: italic; margin-left: 2px; }
   .badge {
-    background: linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
-    color: var(--g-blue-dark);
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(37, 99, 235, 0.28));
+    color: var(--g-blue);
     font-size: 13px;
     font-weight: 700;
-    padding: 3px 10px;
+    padding: 4px 12px;
     border-radius: var(--radius-full);
-    margin-left: 10px;
+    margin-left: 12px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    letter-spacing: 0.02em;
-    border: 1px solid rgba(66, 133, 244, 0.25);
-    box-shadow: 0 2px 6px rgba(66, 133, 244, 0.1);
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   .subtitle {
     font-size: 14.5px;
     color: var(--muted);
-    margin-top: 6px;
+    margin-top: 8px;
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 
   /* Search Box */
   .search-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px 28px;
-    box-shadow: var(--shadow-lg);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 26px 30px;
+    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     margin-bottom: 22px;
-    backdrop-filter: blur(10px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .search-box:hover {
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.15);
   }
   .row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
     margin-bottom: 14px;
     align-items: center;
   }
   #q {
     flex: 1 1 280px;
-    font-size: 15.5px;
-    padding: 12px 20px;
-    border: 1.5px solid #cbd5e1;
+    font-size: 16px;
+    padding: 13px 22px;
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
     border-radius: var(--radius-full);
     outline: none;
-    background: #f8fafc;
+    background: rgba(30, 41, 59, 0.75);
     color: var(--text-primary);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
   }
   #q:focus {
-    background: #ffffff;
+    background: rgba(30, 41, 59, 0.95);
     border-color: var(--g-blue);
-    box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.15), inset 0 1px 2px rgba(0,0,0,0.02);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 20px rgba(56, 189, 248, 0.2);
   }
   .btn {
-    padding: 12px 22px;
+    padding: 12px 24px;
     font-size: 14px;
     font-weight: 600;
     border-radius: var(--radius-full);
     border: none;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     font-family: inherit;
     display: inline-flex;
     align-items: center;
@@ -139,24 +172,22 @@
   }
   .btn:active { transform: scale(0.97); }
   .btn-blue {
-    background: linear-gradient(135deg, var(--g-blue) 0%, var(--g-blue-dark) 100%);
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.25);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   .btn-blue:hover {
-    background: linear-gradient(135deg, #5393f5 0%, #1765cc 100%);
-    box-shadow: 0 6px 16px rgba(66, 133, 244, 0.35);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5);
   }
   .btn-teal {
-    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   .btn-teal:hover {
-    background: linear-gradient(135deg, #14b8a6 0%, #115e59 100%);
-    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.3);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(52, 211, 153, 0.45);
   }
 
   /* Example Buttons */
@@ -170,29 +201,29 @@
     color: var(--muted);
   }
   .ex {
-    background: #f1f5f9;
-    border: 1px solid var(--border);
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-full);
-    padding: 5px 13px;
+    padding: 6px 14px;
     cursor: pointer;
     font-size: 12.5px;
     font-weight: 500;
     color: var(--text-secondary);
-    transition: all 0.18s ease;
+    transition: all 0.2s ease;
   }
   .ex:hover {
-    background: #ffffff;
-    color: var(--g-blue-dark);
+    background: rgba(56, 189, 248, 0.16);
     border-color: var(--g-blue);
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(66, 133, 244, 0.12);
+    color: var(--g-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
   }
 
   /* Search History (localStorage) */
   .history-section {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid #f1f5f9;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     display: none;
   }
   .history-header {
@@ -213,40 +244,41 @@
   .btn-clear-hist {
     font-size: 11.5px;
     font-weight: 600;
-    padding: 3px 10px;
-    border: 1px solid #fecaca;
+    padding: 4px 12px;
+    border: 1px solid rgba(248, 113, 113, 0.4);
     border-radius: var(--radius-full);
-    background: #fff5f5;
+    background: rgba(239, 68, 68, 0.12);
+    color: var(--g-red);
     cursor: pointer;
-    color: #dc2626;
     font-family: inherit;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
   }
   .btn-clear-hist:hover {
-    background: #fee2e2;
-    border-color: #f87171;
+    background: rgba(239, 68, 68, 0.25);
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.4);
   }
   .history-tags { display: flex; flex-wrap: wrap; gap: 7px; }
   .history-tag {
-    padding: 5px 12px;
+    padding: 5px 13px;
     font-size: 12px;
     font-weight: 500;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-full);
-    background: #f8fafc;
+    background: rgba(30, 41, 59, 0.55);
     cursor: pointer;
     color: var(--text-secondary);
     display: inline-flex;
     align-items: center;
     gap: 5px;
     font-family: inherit;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
   }
   .history-tag:hover {
-    background: #eff6ff;
-    border-color: #93c5fd;
-    color: var(--g-blue-dark);
+    background: rgba(56, 189, 248, 0.16);
+    border-color: var(--g-blue);
+    color: var(--g-blue);
     transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
   }
 
   /* Status Bar */
@@ -256,21 +288,25 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 20px;
-    font-size: 13px;
-    margin-bottom: 18px;
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 12px 22px;
+    font-size: 13.5px;
+    margin-bottom: 20px;
     color: var(--muted);
     box-shadow: var(--shadow-sm);
   }
   .status-bar strong { color: var(--text-primary); font-weight: 700; }
   #scoreSum {
-    background: #dcfce7;
-    color: #15803d;
-    padding: 2px 8px;
-    border-radius: 6px;
+    background: rgba(52, 211, 153, 0.16);
+    color: var(--g-green);
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    box-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+    padding: 3px 10px;
+    border-radius: 8px;
     font-weight: 700;
   }
 
@@ -294,29 +330,33 @@
     body { padding: 20px 12px 40px; }
   }
   .col {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
-    padding: 20px;
-    box-shadow: var(--shadow-md);
+    padding: 22px;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
   .col-hdr {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding-bottom: 14px;
     margin-bottom: 16px;
   }
   .col-title-old {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
-    color: #e11d48;
+    color: var(--g-red);
+    text-shadow: 0 0 16px var(--g-red-glow);
     display: flex;
     align-items: center;
     gap: 6px;
   }
   .col-title-new {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
-    color: #0284c7;
+    color: var(--g-blue);
+    text-shadow: 0 0 16px var(--g-blue-glow);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -324,32 +364,34 @@
   .col-desc {
     font-size: 12.5px;
     color: var(--muted);
-    margin-top: 4px;
+    margin-top: 5px;
     line-height: 1.45;
   }
 
-  /* Cards */
+  /* Cards with 3D Depth */
   .card {
-    border: 1px solid #f1f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-md);
-    padding: 15px 17px;
-    margin-bottom: 12px;
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: perspective(1000px) translateZ(0);
     position: relative;
   }
   .card:hover {
-    border-color: var(--border-hover);
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-    transform: translateY(-2px);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.2);
+    transform: perspective(1000px) translateY(-4px) translateZ(8px);
+    background: rgba(30, 41, 59, 0.88);
   }
   .card.spam {
     border-left: 4px solid var(--g-red);
-    background: linear-gradient(90deg, rgba(254, 242, 242, 0.5) 0%, #ffffff 40%);
-    border-top-color: #fee2e2;
-    border-right-color: #fee2e2;
-    border-bottom-color: #fee2e2;
+    border-color: rgba(248, 113, 113, 0.3);
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.16) 0%, rgba(30, 41, 59, 0.68) 45%);
   }
   .card-top {
     display: flex;
@@ -361,18 +403,18 @@
   .rank {
     font-size: 11.5px;
     font-weight: 700;
-    color: #475569;
-    background: #f1f5f9;
-    padding: 3px 9px;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
     border-radius: var(--radius-full);
     letter-spacing: 0.02em;
   }
   .rank.gold {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    color: #92400e;
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #0f172a;
+    border: 1px solid rgba(251, 191, 36, 0.6);
     font-weight: 800;
-    box-shadow: 0 1px 4px rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
   }
   .spam-tag {
     font-size: 11px;
@@ -382,20 +424,23 @@
     letter-spacing: 0.01em;
   }
   .spam-tag.red {
-    background: #fee2e2;
-    color: #b91c1c;
-    border: 1px solid #fca5a5;
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
   }
   .spam-tag.blue {
-    background: #e0f2fe;
-    color: #0369a1;
-    border: 1px solid #bae6fd;
+    background: rgba(56, 189, 248, 0.2);
+    color: #bae6fd;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
   }
   .card-url {
     color: var(--url-green);
-    font-size: 14px;
+    font-size: 14.5px;
     font-weight: 600;
     text-decoration: none;
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
     word-break: break-all;
     display: inline-block;
     margin-bottom: 6px;
@@ -413,9 +458,10 @@
     word-break: break-word;
   }
   mark {
-    background: #fef08a;
-    color: #854d0e;
-    padding: 1px 5px;
+    background: rgba(251, 191, 36, 0.28);
+    color: #fef08a;
+    border: 1px solid rgba(251, 191, 36, 0.5);
+    padding: 1px 6px;
     border-radius: 4px;
     font-weight: 700;
   }
@@ -427,37 +473,40 @@
     gap: 8px;
     font-size: 12.5px;
     color: var(--muted);
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding-top: 10px;
   }
   .score-red {
-    color: #dc2626;
+    color: var(--g-red);
     font-weight: 700;
     font-size: 13px;
-    background: #fef2f2;
-    padding: 3px 9px;
+    background: rgba(239, 68, 68, 0.16);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    padding: 3px 10px;
     border-radius: 6px;
   }
   .score-green {
-    color: #16a34a;
+    color: var(--g-green);
     font-weight: 700;
     font-size: 13px;
-    background: #f0fdf4;
-    padding: 3px 9px;
+    background: rgba(52, 211, 153, 0.16);
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    padding: 3px 10px;
     border-radius: 6px;
   }
   .links-in {
     font-weight: 700;
-    color: #2563eb;
-    background: #eff6ff;
-    padding: 3px 9px;
+    color: var(--g-blue);
+    background: rgba(56, 189, 248, 0.16);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 3px 10px;
     border-radius: 6px;
   }
 
   /* Empty state */
   .empty {
-    background: var(--card);
-    border: 2px dashed #cbd5e1;
+    background: var(--card-bg);
+    border: 2px dashed rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     padding: 50px 24px;
     text-align: center;
@@ -469,7 +518,7 @@
     font-size: 48px;
     margin-bottom: 12px;
     line-height: 1;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));
+    filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.3));
   }
   .empty-title {
     font-size: 20px;
@@ -489,12 +538,13 @@
     text-align: center;
     margin-top: 48px;
     font-size: 13px;
-    color: #94a3b8;
+    color: #64748b;
     font-weight: 500;
   }
 </style>
 </head>
 <body>
+<canvas id="bg-canvas3d"></canvas>
 <div class="container">
 <header>
   <div class="logo">
@@ -1866,7 +1916,313 @@ window.addEventListener('DOMContentLoaded', function() {
       search(true);
     }
   });
+
+  // Initialize 3D Floating Objects & Constellation Scene
+  init3DScene();
 });
+
+/* ============================================================
+   3D FLOATING OBJECTS & PAGERANK CONSTELLATION
+   ============================================================ */
+function init3DScene() {
+  var canvas = document.getElementById('bg-canvas3d');
+  if (!canvas) return;
+
+  var mouseX = 0, mouseY = 0;
+  var targetX = 0, targetY = 0;
+  window.addEventListener('mousemove', function(e) {
+    mouseX = (e.clientX - window.innerWidth / 2) / 100;
+    mouseY = (e.clientY - window.innerHeight / 2) / 100;
+  });
+
+  // 1. Try Three.js if loaded
+  if (typeof THREE !== 'undefined') {
+    try {
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 24;
+
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Ambient & Directional Lights
+      var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+      scene.add(ambientLight);
+
+      var light1 = new THREE.PointLight(0x38bdf8, 2.2, 70);
+      light1.position.set(-16, 12, 10);
+      scene.add(light1);
+
+      var light2 = new THREE.PointLight(0xf87171, 2.0, 70);
+      light2.position.set(16, -10, 10);
+      scene.add(light2);
+
+      var light3 = new THREE.PointLight(0x34d399, 1.8, 70);
+      light3.position.set(0, 15, 6);
+      scene.add(light3);
+
+      var group = new THREE.Group();
+      scene.add(group);
+
+      var objects = [];
+
+      // 1. Google Blue 3D Cube
+      var cubeMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        metalness: 0.35,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.88
+      });
+      var cube = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.5, 2.5), cubeMat);
+      cube.position.set(-12, 7, -2);
+      group.add(cube);
+      objects.push({ mesh: cube, rx: 0.008, ry: 0.012, rz: 0.005, baseY: 7, speed: 0.0015 });
+
+      var cubeWire = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(2.52, 2.52, 2.52)),
+        new THREE.LineBasicMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.7 })
+      );
+      cube.add(cubeWire);
+
+      // 2. Google Red 3D Octahedron
+      var octMat = new THREE.MeshStandardMaterial({
+        color: 0xf87171,
+        metalness: 0.4,
+        roughness: 0.25,
+        transparent: true,
+        opacity: 0.88
+      });
+      var octahedron = new THREE.Mesh(new THREE.OctahedronGeometry(2.1), octMat);
+      octahedron.position.set(13, 6, -3);
+      group.add(octahedron);
+      objects.push({ mesh: octahedron, rx: 0.01, ry: -0.009, rz: 0.007, baseY: 6, speed: 0.0018 });
+
+      // 3. Google Yellow 3D Torus
+      var torMat = new THREE.MeshStandardMaterial({
+        color: 0xfbbf24,
+        metalness: 0.5,
+        roughness: 0.3,
+        transparent: true,
+        opacity: 0.88
+      });
+      var torus = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.55, 16, 40), torMat);
+      torus.position.set(-13, -7, -4);
+      group.add(torus);
+      objects.push({ mesh: torus, rx: 0.007, ry: 0.014, rz: -0.008, baseY: -7, speed: 0.0012 });
+
+      // 4. Google Green 3D Icosahedron
+      var icoMat = new THREE.MeshStandardMaterial({
+        color: 0x34d399,
+        metalness: 0.35,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.88
+      });
+      var icosahedron = new THREE.Mesh(new THREE.IcosahedronGeometry(2.0), icoMat);
+      icosahedron.position.set(13, -8, -2);
+      group.add(icosahedron);
+      objects.push({ mesh: icosahedron, rx: -0.009, ry: 0.011, rz: 0.006, baseY: -8, speed: 0.0016 });
+
+      // 5. 3D PageRank Web Graph (Constellation of Connected Nodes)
+      var nodeCount = 36;
+      var nodeGeom = new THREE.SphereGeometry(0.26, 12, 12);
+      var colors = [0x38bdf8, 0xf87171, 0xfbbf24, 0x34d399];
+      var nodes = [];
+
+      for (var i = 0; i < nodeCount; i++) {
+        var mat = new THREE.MeshBasicMaterial({
+          color: colors[i % colors.length],
+          transparent: true,
+          opacity: 0.85
+        });
+        var node = new THREE.Mesh(nodeGeom, mat);
+        node.position.set(
+          (Math.random() - 0.5) * 34,
+          (Math.random() - 0.5) * 24,
+          (Math.random() - 0.5) * 12 - 4
+        );
+        node.userData = {
+          vx: (Math.random() - 0.5) * 0.01,
+          vy: (Math.random() - 0.5) * 0.01,
+          vz: (Math.random() - 0.5) * 0.01
+        };
+        group.add(node);
+        nodes.push(node);
+      }
+
+      var maxLines = nodeCount * 4;
+      var lineMat = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.25
+      });
+      var lineGeom = new THREE.BufferGeometry();
+      var linePositions = new Float32Array(maxLines * 6);
+      lineGeom.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+      var lineMesh = new THREE.LineSegments(lineGeom, lineMat);
+      group.add(lineMesh);
+
+      window.addEventListener('resize', function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      var clock = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        clock += 0.015;
+
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+        group.rotation.y = targetX * 0.15;
+        group.rotation.x = -targetY * 0.15;
+
+        for (var j = 0; j < objects.length; j++) {
+          var o = objects[j];
+          o.mesh.rotation.x += o.rx;
+          o.mesh.rotation.y += o.ry;
+          o.mesh.rotation.z += o.rz;
+          o.mesh.position.y = o.baseY + Math.sin(clock * 1.5 + j) * 0.6;
+        }
+
+        var lineIdx = 0;
+        var positions = lineMesh.geometry.attributes.position.array;
+
+        for (var n = 0; n < nodes.length; n++) {
+          var nd = nodes[n];
+          nd.position.x += nd.userData.vx;
+          nd.position.y += nd.userData.vy;
+          nd.position.z += nd.userData.vz;
+
+          if (Math.abs(nd.position.x) > 18) nd.userData.vx *= -1;
+          if (Math.abs(nd.position.y) > 14) nd.userData.vy *= -1;
+          if (Math.abs(nd.position.z) > 8) nd.userData.vz *= -1;
+
+          for (var m = n + 1; m < nodes.length; m++) {
+            var nd2 = nodes[m];
+            var dist = nd.position.distanceTo(nd2.position);
+            if (dist < 6.5 && lineIdx < maxLines * 6 - 6) {
+              positions[lineIdx++] = nd.position.x;
+              positions[lineIdx++] = nd.position.y;
+              positions[lineIdx++] = nd.position.z;
+              positions[lineIdx++] = nd2.position.x;
+              positions[lineIdx++] = nd2.position.y;
+              positions[lineIdx++] = nd2.position.z;
+            }
+          }
+        }
+
+        for (var k = lineIdx; k < maxLines * 6; k++) {
+          positions[k] = 0;
+        }
+        lineMesh.geometry.attributes.position.needsUpdate = true;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+      return;
+    } catch (err) {
+      console.warn('Three.js init error, using canvas 3D engine:', err);
+    }
+  }
+
+  // 2. Pure Canvas 2D/3D Fallback Engine (runs offline without external CDNs)
+  initCanvas3DFallback(canvas);
+}
+
+function initCanvas3DFallback(canvas) {
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', function(e) {
+    mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+    mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
+  });
+
+  var points = [];
+  var colors = ['#38bdf8', '#f87171', '#fbbf24', '#34d399'];
+  for (var i = 0; i < 40; i++) {
+    points.push({
+      x: (Math.random() - 0.5) * 800,
+      y: (Math.random() - 0.5) * 600,
+      z: Math.random() * 600 - 200,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      vz: (Math.random() - 0.5) * 0.4,
+      c: colors[i % colors.length]
+    });
+  }
+
+  var angleX = 0, angleY = 0;
+  function draw() {
+    requestAnimationFrame(draw);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    angleX += 0.002 + mouseX * 0.05;
+    angleY += 0.003 + mouseY * 0.05;
+
+    var cx = canvas.width / 2;
+    var cy = canvas.height / 2;
+    var fov = 400;
+
+    var proj = [];
+    for (var i = 0; i < points.length; i++) {
+      var p = points[i];
+      p.x += p.vx; p.y += p.vy; p.z += p.vz;
+      if (Math.abs(p.x) > 450) p.vx *= -1;
+      if (Math.abs(p.y) > 350) p.vy *= -1;
+      if (p.z < -200 || p.z > 400) p.vz *= -1;
+
+      var x1 = p.x * Math.cos(angleY) + p.z * Math.sin(angleY);
+      var z1 = -p.x * Math.sin(angleY) + p.z * Math.cos(angleY);
+      var y1 = p.y * Math.cos(angleX) - z1 * Math.sin(angleX);
+      var z2 = p.y * Math.sin(angleX) + z1 * Math.cos(angleX);
+
+      var scale = fov / (fov + z2 + 300);
+      var px = x1 * scale + cx;
+      var py = y1 * scale + cy;
+      proj.push({ x: px, y: py, scale: scale, c: p.c });
+    }
+
+    ctx.lineWidth = 0.8;
+    for (var i = 0; i < proj.length; i++) {
+      for (var j = i + 1; j < proj.length; j++) {
+        var dx = proj[i].x - proj[j].x;
+        var dy = proj[i].y - proj[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) {
+          ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.25 * (1 - dist / 110)) + ')';
+          ctx.beginPath();
+          ctx.moveTo(proj[i].x, proj[i].y);
+          ctx.lineTo(proj[j].x, proj[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    for (var i = 0; i < proj.length; i++) {
+      var pt = proj[i];
+      if (pt.scale > 0) {
+        ctx.fillStyle = pt.c;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, Math.max(1.5, 3.5 * pt.scale), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+  draw();
+}
 </script>
 </body>
 </html>

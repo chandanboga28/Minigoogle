@@ -36,3 +36,4 @@ open index.html
 ```
 
 Or double-click `index.html` in your file explorer.
+
